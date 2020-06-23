@@ -31,5 +31,3 @@ ENV GOPATH /go
 WORKDIR $GOPATH/src/github.com/praveen4g0/comparator
 
 COPY . .
-
-RUN go mod vendor

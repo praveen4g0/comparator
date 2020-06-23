@@ -59,3 +59,12 @@ gauge run --log-level=debug --verbose  specs/comparator.spec
 * `testdata` contains testdata required by the framework to run
 * On Execution of gauge command it generates 2 directories 	`logs` and `reports`
 
+## Docker Run
+* Build docker file
+```
+docker build . -t <username>/comparator:v0.1
+```
+* Docker run
+```
+docker run --rm -it <username>/comparator:v0.1 gauge run --log-level=debug --verbose specs/comparator.spec 
+```

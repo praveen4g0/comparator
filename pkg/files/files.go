@@ -7,6 +7,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/praveen4g0/comparator/pkg/assert"
 )
@@ -36,4 +37,8 @@ func ReadBytes(elem string) ([]byte, error) {
 		return nil, fmt.Errorf("couldn't load testdata example PullRequest event data: %v", err)
 	}
 	return bytes, nil
+}
+
+func SplitLinesBySperator(file, seperator string) []string {
+	return strings.Split(string(file), seperator)
 }

@@ -1,9 +1,7 @@
 package comparator
 
 import (
-	"io/ioutil"
 	"log"
-	"strings"
 	"sync"
 
 	"github.com/getgauge-contrib/gauge-go/gauge"
@@ -15,26 +13,21 @@ import (
 
 func Compare(dir1, dir2 string) {
 	var err error
-	furls, err := ioutil.ReadFile(files.Path(dir1))
+	furls, err := files.ReadBytes(dir1)
 	assert.NoError(err)
-	surls, err := ioutil.ReadFile(files.Path(dir2))
+	surls, err := files.ReadBytes(dir2)
 	assert.NoError(err)
-	furl_list := strings.Split(string(furls), "\n")
-	surl_list := strings.Split(string(surls), "\n")
+	furl_list := files.SplitLinesBySperator(string(furls), "\n")
+	surl_list := files.SplitLinesBySperator(string(surls), "\n")
 
-	min, max := func() ([]string, []string) {
-		if len(furl_list) < len(surl_list) {
-			return furl_list, surl_list
-		}
-		return surl_list, furl_list
-	}()
+	min, max := getMinMax(furl_list, surl_list)
 
 	c := make(chan *http.Result)
 	var wg sync.WaitGroup
 
-	for key, value := range min {
+	for index, value := range min {
 		wg.Add(1)
-		go http.GetJsonResponses([]string{max[key], value}, c, &wg)
+		go http.GetJsonResponses([]string{max[index], value}, c, &wg)
 	}
 
 	go func() {
@@ -47,7 +40,7 @@ func Compare(dir1, dir2 string) {
 			gauge.WriteMessage(res.Url[0] + " or " + res.Url[1] + " are invalid Reason: " + res.Err.Error())
 			log.Println(res.Url[0] + " or " + res.Url[1] + " are invalid Reason: " + res.Err.Error())
 		} else {
-			success, err := (&JSONMatcher{JSONToMatch: res.JsonActual}).Match(res.JsonExpected)
+			success, err := (&JSONMatcher{JSONToMatch: res.JsonExpected}).Match(res.JsonActual)
 			assert.NoError(err)
 			if success {
 				log.Println(res.Url[0] + " equals " + res.Url[1])
@@ -58,4 +51,11 @@ func Compare(dir1, dir2 string) {
 			}
 		}
 	}
+}
+
+func getMinMax(a, b []string) ([]string, []string) {
+	if len(a) < len(b) {
+		return a, b
+	}
+	return b, a
 }

@@ -24,6 +24,13 @@ tags: e2e
   |------------------|------------------|
   |testdata/json1.txt|testdata/json3.txt|
 
+## Compare API Response with invalid url in file 1
+tags: e2e
+
+* Compare API response
+  |file-dir1         |file-dir2         |
+  |------------------|------------------|
+  |testdata/json4.txt|testdata/json3.txt|
 
 ## Compare API Response with invalid url in file 2
 tags: e2e
@@ -32,11 +39,3 @@ tags: e2e
   |file-dir1         |file-dir2         |
   |------------------|------------------|
   |testdata/json3.txt|testdata/json4.txt|
-
-  ## Compare API Response with invalid url in file 1
-tags: e2e
-
-* Compare API response
-  |file-dir1         |file-dir2         |
-  |------------------|------------------|
-  |testdata/json4.txt|testdata/json3.txt|
